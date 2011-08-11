@@ -1,0 +1,19 @@
+in processHeader(), need to grab the static content after calling exitFromLast (fill in getContent())
+
+in initialSearch(), need images to contain all the images after searching for featured artist (which is the getContent method)
+
+in loadStarred(), need to grab all of the current user's starred items based on cookies
+
+in createImages(), use the argument images to load the images instead of hard coded images
+
+in buildDescription(), just follow the instructions
+
+in isStarred() and isFeatured(), just follow the method signature
+
+in newArtSearch(), grab the values from the <select> tags, grab data from db, and call createImages()
+
+in unstar(), need to remove the starred piece to the user's cache
+
+in addToStarredPage(), need to add the starred piece to the user's cache
+
+in addToStarredPage(), where it says "image.attr("src", $("#mag img").attr("src"))", instead of "$("#mag img").attr("src")", we need to grab the source according to the database
