@@ -1,0 +1,26 @@
+div#mag {
+    padding: 5px;
+    box-shadow: 1px 1px 5px black;
+    z-index: 9999;
+    background: white;
+}
+
+div#mag {
+    font-family: arial;
+    font-size: 12px;
+}
+
+div#mag #imgcont {
+    display: inline-block;
+}
+div#mag:hover {
+    cursor: pointer;
+}
+
+div#mag img {
+}
+
+#mag p {
+    margin: 0px;
+    padding: 5px;
+}

@@ -1,0 +1,261 @@
+
+    initialSearch();
+	populateStarredPage();
+
+    $(".footer").addClass(".footerbottom");
+    $(".footer").css("bottom", "0px");
+
+    var scrollwidth = $.getScrollbarWidth();
+
+	function hashChanged() {
+        checkHash(false);
+        return false;
+	}
+
+	window.onhashchange = hashChanged;
+
+    $(".topmenuitem a, .bottommenuitem").click( function(){
+
+        window.location.hash = "h"+$(this).attr("id");
+        checkHash(false);
+        // return false;
+    });
+
+    checkHash(true);
+
+
+	function initialSearch() {
+
+        var i=1,
+        img,
+        container;
+
+        container = $('#searchresults');
+
+        var counter = 0;
+        if (container[0]) {
+            for ( i=1; i<=22; i++ ) {
+
+                img = $('<img>', {
+                    load: function() {
+                        counter++;
+                        if ( counter == 22 ) {
+
+                            $('#searchresults').boxify();
+                            $('#searchresults img').show();
+                            $('#searchresults').magnify();
+                            $('#searchresults').glorify();
+                            doRest();
+                        }
+                    }
+                }).appendTo(container);
+
+                img.hide();
+
+                img[0].src = 'public/images/temp/'+i + '.jpg';
+            }
+        }
+	}
+
+    function doRest() {
+
+        $(".bottomcontent").hide();
+    }
+
+	function populateStarredPage() {
+	}
+
+    function checkHash(reload) {
+
+        if ( window.location.hash ) {
+
+            var hash = window.location.hash.substring(2);
+
+            if ( $("#"+hash).parent(".topmenuitem").size() != 0 && hash != $("body").data("staticpage") ) {
+                processHeaderHash( hash, reload );
+            }
+            else if ( hash != $("body").data("staticpage") ) {
+                processFooterHash( hash, reload );
+            }
+        }
+        else {
+            window.location.hash = "#hfeatured";
+            $("body").css("overflow", "scroll-y");
+            $("body").scrollTop("0px");
+            $("body").data("staticpage", "featured");
+            $("body").data("static", true);
+            addCurrentstaticLink("featured");
+        }
+
+        //checkScrolls();
+    }
+
+    function checkScrolls() {
+        if ( document.body.scrollHeight > document.body.clientHeight ) {
+
+            $("body").css("width", 1583+scrollwidth);
+            $(".header").css("width", 1583+scrollwidth);
+            $(".footer").css("width", 1583+scrollwidth);
+        }
+        else {
+            $("body").css("width", 1583);
+            $(".header").css("width", 1583);
+            $(".footer").css("width", 1583);
+        }
+    }
+
+    function removeCurrentStatcLink( ) {
+
+        $("#"+$("body").data("staticpage")).css("color", "#828487");
+
+        $("#"+$("body").data("staticpage")).mouseenter( function() {
+            $(this).css("color", "black");
+        });
+
+        $("#"+$("body").data("staticpage")).mouseleave( function() {
+            $(this).css("color", "#828487");
+        });
+    }
+
+    function addCurrentstaticLink( hash ) {
+        $("#"+hash).unbind("mouseleave mouseenter");
+        $("#"+hash).css("color", "black");
+    }
+    function processHeaderHash( hash, reload ) {
+
+        var content = getContent( hash.substring(1) );
+
+        removeCurrentStatcLink();
+        addCurrentstaticLink(hash);
+
+        if ( !$("body").data("static") && !reload ) {
+            removeCurrentBottomLink();
+            collapseBottom();
+            $("body").data("bottompage", null);
+            $("body").data("static", true);
+        }
+
+        $("body").data("static", true);
+        $("body").data("staticpage", hash);
+        $("body").css("overflow-y", "scroll");
+
+        fadeStatic();
+
+        $("#static").animate({
+            opacity: 1
+        }, {duration:150, queue:true});
+    }
+
+    function fadeStatic() {
+        $("#static").animate({
+            opacity: 0
+        }, {duration:150, queue:true, complete: function() {
+            $("body").scrollTop("0px");
+        }});
+    }
+
+    function getContent( id ) {
+        return "THIS IS CONTENT MY BROTHA";
+    }
+
+    function collapseBottom() {
+
+        $(".bottomcontent").animate( {
+            opacity: 0
+        }, {duration:150, queue: true, complete: function() {
+            $("div.footer").css("height", $(window).height()-100);
+            $("body").css("background", "#707070");
+            $("div.footer").animate( {
+                top: $(window).height()-100
+                }, {duration: 500, queue: true, complete: function() {
+                $(".bottomcontent").hide();
+                $("#static").show();
+                $("div.footer").css("bottom", "0px");
+                $("div.footer").css("top", "auto");
+                $("div.footer").css("height", "100px");
+                $(".bottommenuitem").css("height", 80);
+            }});
+        }});
+    }
+
+    function expandBottom(content) {
+
+		$("#static").stop(true, true).fadeOut(300, function() {
+			$("div.footer").animate( {
+				height: $(window).height()-100
+			}, 500, function() {
+
+				$("body").scrollTop("0px");
+				$("body").css("background", "white");
+				$("div.footer").css("top", "100px");
+				$("div.footer").css("bottom", "auto");
+				$("div.footer").css("height", "100px");
+				$(".bottommenuitem").css("height", 55);
+
+				$(content).show();
+				$(content).animate( {
+					opacity: 1
+				}, 300);
+			});
+		});
+
+    }
+
+    function removeCurrentBottomLink() {
+
+        var hash =  $("body").data("bottompage");
+
+        $("#"+hash+" .icon").css("background-image", "url('public/images/icons/"+hash+"_grey.png')");
+
+        $("#"+hash).mouseenter( function() {
+
+            $("#"+$(this).attr("id")+" .icon").css("background-image", "url('public/images/icons/"+hash+"_black.png')");
+        });
+
+        $("#"+hash).mouseleave( function() {
+
+            $(this+" .icon").css("background-image", "url('public/images/icons/"+hash+"_grey.png')");
+        });
+
+        $("#"+hash).css("color", "#707070");
+    }
+
+    function addCurrentBottomLink(hash) {
+
+        $("#"+hash).unbind("mouseenter mouseleave");
+        $("#"+hash+" .icon").css("background-image", "url('public/images/icons/"+hash+"_black.png')");
+
+        $("#"+hash).css("color", "black");
+    }
+
+    function processFooterHash( hash, reload ) {
+
+        removeCurrentStatcLink();
+
+        if ( $("body").data("static") || reload )
+            expandBottom("#"+hash+"content");
+
+        if ( $("body").data("bottompage") != hash || reload) {
+
+            removeCurrentBottomLink();
+            $("body").data("bottompage", hash);
+            addCurrentBottomLink(hash);
+
+			$(".bottomcontent").animate( {
+                opacity: 0
+            }, 150, function() {
+
+				$(".bottomcontent").hide();
+				$("body").scrollTop("0px");
+				//$("#"+hash+"content").show();
+				//$("#"+hash+"content").animate( {
+				//		opacity: 1
+				//}, 150);
+			});
+		}
+
+        $("body").data("static", false);
+        $("body").data("staticpage", null);
+
+        //checkScrolls();
+    }
